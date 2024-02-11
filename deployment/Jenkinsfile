@@ -14,11 +14,16 @@ pipeline {
                              }
             }
         }
-        stage('Analizar calidad del codigo') {
-            steps {
-                sh 'gradle sonarqube'
-            }
-        }
+       stage('Quality Scan Project') {
+           environment {
+               scannerHome = tool 'SonarQubeScanner'
+           }
+           steps {
+               withSonarQubeEnv('SonarQubeServer') {
+                   sh "gradle sonarqube -Dsonar.login=admin -Dsonar.password=Pesunita1_ -Dsonar.projectKey=pry2"
+               }
+           }
+       }
         stage('Construir imagen Docker') {
             steps {
                 sh 'docker build -t myapp .'

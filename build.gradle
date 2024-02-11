@@ -1,5 +1,14 @@
 plugins {
+    // Otros plugins de Gradle
+    //id 'org.sonarqube' version '3.3'
+    id "org.sonarqube" version "3.5.0.2730"
     id 'java'
+}
+
+sonarqube {
+    properties {
+        property "sonar.host.url", "http://localhost:9000"
+    }
 }
 
 group 'org.example'
