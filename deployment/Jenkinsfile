@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clonar repositorio') {
+            steps {
+                git 'https://github.com/tu-usuario/tu-repositorio.git'
+            }
+        }
+        stage('Ejecutar pruebas unitarias') {
+            steps {
+                sh 'gradle test'
+            }
+        }
+        stage('Analizar calidad del código') {
+            steps {
+                sh 'gradle sonarqube'
+            }
+        }
+        stage('Construir imagen Docker') {
+            steps {
+                sh 'docker build -t myapp .'
+            }
+        }
+        stage('Subir imagen Docker') {
+            steps {
+                withDockerRegistry([credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/']) {
+                    sh 'docker push myapp'
+                }
+            }
+        }
+    }
+}
