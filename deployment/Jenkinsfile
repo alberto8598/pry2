@@ -1,5 +1,8 @@
 pipeline {
     agent any
+     tools {
+        gradle '7.5.1'
+        }
 
     stages {
         stage('Clone Repository') {
@@ -10,14 +13,14 @@ pipeline {
                stage('JAVA Version') {
                      steps {
                            withGradle {
-                                    sh 'java --version'
+                                    bat 'java --version'
                                  }
                            }
                    }
         stage('Ejecutar pruebas unitarias') {
             steps {
                   withGradle {
-                         sh 'gradle Test'
+                         bat 'gradle test'
                              }
             }
         }
@@ -25,7 +28,7 @@ pipeline {
         stage('build Gradle Project') {
                 steps {
                       withGradle {
-                               sh 'gradle clean build'
+                               bat 'gradle clean build'
                             }
                       }
               }
@@ -36,19 +39,19 @@ pipeline {
            }
            steps {
                withSonarQubeEnv('SonarQubeServer') {
-                   sh "gradle sonarqube -Dsonar.login=admin -Dsonar.password=Pesunita1_ -Dsonar.projectKey=pry2"
+                   bat "gradle sonarqube -Dsonar.login=admin -Dsonar.password=Pesunita1_ -Dsonar.projectKey=pry2"
                }
            }
        }
         stage('Construir imagen Docker') {
             steps {
-                sh 'docker build -t myapp .'
+                bat 'docker build -t myapp .'
             }
         }
         stage('Subir imagen Docker') {
            steps {
               withDockerRegistry([credentialsId: '7dd3df4f-f53c-4ad2-bf16-d5352962ae9c', url: 'https://index.docker.io/v1/']) {
-                           sh 'docker push curribifine/credibanco'
+                           bat 'docker push curribifine/credibanco'
                  }
             }
         }
