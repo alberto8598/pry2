@@ -1,8 +1,5 @@
 pipeline {
     agent any
-     tools {
-        gradle '7.5.1'
-        }
 
     stages {
         stage('Clone Repository') {
@@ -10,30 +7,14 @@ pipeline {
                       git branch: 'develop', credentialsId: '112f9878-7c13-4fe6-a745-f95f0c4f47ed', url: 'https://github.com/alberto8598/pry2.git'
                       }
              }
-               stage('JAVA Version') {
-                     steps {
-                           withGradle {
-                                    sh 'java --version'
-                                 }
-                           }
-                   }
         stage('Ejecutar pruebas unitarias') {
             steps {
                   withGradle {
-                         sh 'gradle test'
+                         sh 'gradle Test'
                              }
             }
         }
-
-        stage('build Gradle Project') {
-                steps {
-                      withGradle {
-                               sh 'gradle clean build'
-                            }
-                      }
-              }
-
-       stage('Quality Scan Project') {
+		stage('Quality Scan Project') {
            environment {
                scannerHome = tool 'SonarQubeScanner'
            }
