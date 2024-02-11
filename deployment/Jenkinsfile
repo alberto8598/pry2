@@ -13,14 +13,14 @@ pipeline {
                stage('JAVA Version') {
                      steps {
                            withGradle {
-                                    bat 'java --version'
+                                    sh 'java --version'
                                  }
                            }
                    }
         stage('Ejecutar pruebas unitarias') {
             steps {
                   withGradle {
-                         bat 'gradle test'
+                         sh 'gradle test'
                              }
             }
         }
@@ -28,7 +28,7 @@ pipeline {
         stage('build Gradle Project') {
                 steps {
                       withGradle {
-                               bat 'gradle clean build'
+                               sh 'gradle clean build'
                             }
                       }
               }
@@ -39,19 +39,19 @@ pipeline {
            }
            steps {
                withSonarQubeEnv('SonarQubeServer') {
-                   bat "gradle sonarqube -Dsonar.login=admin -Dsonar.password=Pesunita1_ -Dsonar.projectKey=pry2"
+                   sh "gradle sonarqube -Dsonar.login=admin -Dsonar.password=Pesunita1_ -Dsonar.projectKey=pry2"
                }
            }
        }
         stage('Construir imagen Docker') {
             steps {
-                bat 'docker build -t myapp .'
+                sh 'docker build -t myapp .'
             }
         }
         stage('Subir imagen Docker') {
            steps {
               withDockerRegistry([credentialsId: '7dd3df4f-f53c-4ad2-bf16-d5352962ae9c', url: 'https://index.docker.io/v1/']) {
-                           bat 'docker push curribifine/credibanco'
+                           sh 'docker push curribifine/credibanco'
                  }
             }
         }
