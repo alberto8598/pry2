@@ -9,10 +9,12 @@ pipeline {
              }
         stage('Ejecutar pruebas unitarias') {
             steps {
-                sh 'gradle test'
+                  withGradle {
+                         sh 'gradle Test'
+                             }
             }
         }
-        stage('Analizar calidad del código') {
+        stage('Analizar calidad del codigo') {
             steps {
                 sh 'gradle sonarqube'
             }
