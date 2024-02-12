@@ -1,5 +1,12 @@
-FROM tomcat:latest
+FROM amazoncorretto:17-alpine
+WORKDIR /app
 VOLUME /tmp
-COPY src/main/build/libs/*.jar united.jar
-ENV JAVA_OPTS=" -XX:+UseContainerSupport -XX:MaxRAMPercentage=70 -Djava.security.egd=file:/dev/./urandom"
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS  -jar united.jar --server.port=8092" ]
+ENV IMG_PATH=/img
+RUN mkdir -p /img
+ADD out/artifacts/untitled_jar app.jar
+
+# Copia el archivo JAR de tu aplicación al contenedor
+#COPY ./out/artifacts/untitled_jar/untitled.jar app.jar
+
+# Define el comando para ejecutar la aplicación Java
+ENTRYPOINT ["java", "-jar", "app.jar"]

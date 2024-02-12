@@ -24,11 +24,14 @@ pipeline {
                }
            }
        }
-        stage('Construir imagen Docker') {
-            steps {
-                sh 'docker build -t myapp .'
+    stage('Build Image Docker') {
+        steps {
+            script {
+
+                dockerImage = docker.build('curribifine/credibanco', '-f deployment/Dockerfile .')
             }
         }
+    }
         stage('Subir imagen Docker') {
            steps {
               withDockerRegistry([credentialsId: '7dd3df4f-f53c-4ad2-bf16-d5352962ae9c', url: 'https://index.docker.io/v1/']) {
